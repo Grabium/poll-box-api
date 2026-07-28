@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+//php artisan db:seed
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
