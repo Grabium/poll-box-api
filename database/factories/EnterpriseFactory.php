@@ -2,14 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Group;
+use App\Models\Enterprise;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use \App\Models\User;
 
 /**
- * @extends Factory<Group>
+ * @extends Factory<Enterprise>
  */
-class GroupFactory extends Factory
+class EnterpriseFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,8 +18,8 @@ class GroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'manager_id' => User::inRandomOrder()->value('id') ?? User::factory()->create(),
-            'description' => 'Lula ou Bolso?',
+            'cadastro_nacional' => fake()->name(16),
+            'razao_social' => fake()->name(100),
         ];
     }
 }

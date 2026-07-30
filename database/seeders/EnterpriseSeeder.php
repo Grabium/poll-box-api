@@ -5,13 +5,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PollSeeder extends Seeder
+class EnterpriseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        \App\Models\Poll::factory()->count(1)->create();
+        \App\Models\Enterprise::factory()->count(1)->create();
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('enterprises', function (Blueprint $table) {
             $table->id();
             $table->string('cadastro_nacional', 16)->unique();
-            $table->string('Razao_social', 100)->unique();
+            $table->string('razao_social', 100)->unique();
             $table->timestamps();
         });
     }

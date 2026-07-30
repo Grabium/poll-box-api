@@ -25,8 +25,10 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            EnterpriseSeeder::class, //precisa definir
             UserSeeder::class,
             GroupSeeder::class,
+            PollSeeder::class,
         ]);
 
     }

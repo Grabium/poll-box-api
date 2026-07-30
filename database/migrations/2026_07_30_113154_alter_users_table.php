@@ -19,8 +19,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('enterprise_id')->constrained()->cascadeOnDelete();
-
-            $table->index('enterprise_id'); // Otimizado para implementação de regra.
         });
     }
 
@@ -29,6 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('users', function (Blueprint $table) {
+            // Remove a foreign key e a coluna
+            $table->dropForeign(['enterprise_id']);
+            $table->dropColumn('enterprise_id');
+        });
     }
 };

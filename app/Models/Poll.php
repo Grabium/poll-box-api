@@ -7,11 +7,26 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['group_id', 'description', 'pending_users_visibility', 'dead_line'])]
+#[Fillable(['group_id',
+            'is_active',
+            'name',
+            'question',
+            'pending_users_visibility', 
+            'dead_line',
+        ])]
 class Poll extends Model
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean', // Garante o tipo bool no PHP
+            'pending_users_visibility' => 'boolean',
+            'dead_line' => 'datetime',
+        ];
+    }
 
     
     public function group(): BelongsTo
