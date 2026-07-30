@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('alternatives', function (Blueprint $table) {
+        Schema::create('enterprises', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('poll_id')->constrained()->cascadeOnDelete();
-            $table->string('description', 400);
-            $table->unsignedInteger('votes');
+            $table->string('cadastro_nacional', 16)->unique();
+            $table->string('Razao_social', 100)->unique();
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('alternatives');
+        Schema::dropIfExists('enterprises');
     }
 };
