@@ -29,6 +29,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //$fakeUsers = \App\Models\User::factory->count(10)->make();//make não persiste no DB. Apenas fica na RAM.
-        \App\Models\User::factory()->count(20)->create();
+        \App\Models\User::factory()->count(2)->create();
     }
 }
