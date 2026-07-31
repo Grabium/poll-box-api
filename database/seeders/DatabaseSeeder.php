@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             PollSeeder::class,
             AlternativeSeeder::class,
             GroupUserSeeder::class,
+            PendingVoteSeeder::class,
+            
         ]);
 
     }

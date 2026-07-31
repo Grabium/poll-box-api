@@ -3,9 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use \App\Models\GroupUser;
-use \App\Models\User;
-use \App\Models\Group;
+use \App\Models\{GroupUser, User, Group};
 
 /**
  * @extends Factory<GroupUser>
