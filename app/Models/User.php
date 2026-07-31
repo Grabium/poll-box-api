@@ -38,6 +38,11 @@ class User extends Authenticatable
      * $adm->managedGroups;//retorna grupos administrados por ele.
      * $adm->managedGroups();//retorna o objeto que representa a relação (HasMany).
      * $adm->managedGroups()->get();//retorna grupos administrados por ele.
+     * 
+     * 
+     * 
+     * 
+     * Relacionamento 1:N - Grupos que o usuário GERENCIA.
      */
     public function managedGroups(): HasMany
     {
@@ -65,14 +70,22 @@ class User extends Authenticatable
      * 
      * recarregue a relação antes de solicitar o estado do objeto no mesmo processo, pois estará desatualizado:
      * $user->load('groups')->groups
+     * 
+     * 
+     * Relacionamento N:N - Grupos dos quais o usuário é MEMBRO.
      */
     public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class)->withTimestamps();
+        return $this->belongsToMany(Group::class)
+                    ->withTimestamps(); // Mapeia os timestamps da tabela pivot
     }
 
+    /****
+     * Relacionamento N:1 - Empresa a qual o usuário PERTENCE.
+     */
     public function enterprise(): BelongsTo
     {
-        return $this->belongsTo(Enterprise::class)->withTimestamps();
+        return $this->belongsTo(Enterprise::class)
+                    ->withTimestamps();// Mapeia os timestamps da tabela pivot
     }
 }
