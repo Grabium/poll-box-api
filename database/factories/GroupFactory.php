@@ -20,7 +20,7 @@ class GroupFactory extends Factory
     {
         return [
             'manager_id' => User::inRandomOrder()->value('id') ?? User::factory()->create(),
-            'description' => 'Lula ou Bolso?',
+            'description' => fake()->text(20),
         ];
     }
 }

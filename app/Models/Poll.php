@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['group_id',
             'is_active',
@@ -36,6 +37,14 @@ class Poll extends Model
             'group_id',       // 2. Chave estrangeira (FK) na tabela 'polls'
             'id'              // 3. Chave primária (Owner Key) na tabela 'groups' (Opcional se for 'id')           
         )->withTimestamps();
+    }
+
+    /**
+     * O snapshot histórico desta enquete (se já encerrada/desativada).
+     */
+    public function historical(): HasOne
+    {
+        return $this->hasOne(PollHistorical::class);
     }
 
 }

@@ -26,9 +26,9 @@ class PendingVoteFactory extends Factory
     {
 
         return [
-            //'user_id' => User::inRandomOrder()->value('id') ?? User::factory()->create(),
-            'user_id' => User::factory()->create(),
-            'poll_id' => Poll::inRandomOrder()->value('id') ?? Poll::factory()->create(),
+            //'user_id' => User::factory()->create(),
+            'user_id' => User::inRandomOrder()->value('id') ?? User::factory()->create()->id,
+            'poll_id' => Poll::inRandomOrder()->value('id') ?? Poll::factory()->create()->id,
         ];
     }
 }
