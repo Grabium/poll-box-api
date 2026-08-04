@@ -18,8 +18,8 @@ class EnterpriseFactory extends Factory
     public function definition(): array
     {
         return [
-            'cadastro_nacional' => fake()->name(16),
-            'razao_social' => fake()->name(100),
+            'cadastro_nacional' => fake()->regexify('[A-Z0-9]{12}[0-9]{2}'),
+            'razao_social' => fake()->company(),
         ];
     }
 }

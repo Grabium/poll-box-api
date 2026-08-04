@@ -2,18 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
-use App\Models\Enterprise;
+use \App\Models\{PollHistorical, Enterprise, User, Group, Poll, Alternative, GroupUser, PendingVote};
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-//use Illuminate\Database\Eloquent\Relations\HasMany;
+use Database\Factories\Helpers\HelperResoucersFactories;
 
 /**
  * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
+    /***
+     * trait
+     */
+    use HelperResoucersFactories;
+
     /**
      * The current password being used by the factory.
      */
@@ -26,13 +28,22 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $enterprise_id = $this->createAnEnterprise()->id;
+
+        [   $name,
+            $email,
+            $email_verified_at,
+            $password,
+            $remember_token,
+        ] = $this->createAnUser();
+        
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),//Não mudar. DB foi semeado.
-            'remember_token' => Str::random(10),
-            'enterprise_id' => Enterprise::inRandomOrder()->value('id') ?? Enterprise::factory()->create(),
+            'name' => $name,
+            'email' => $email,
+            'email_verified_at' => $email_verified_at,
+            'password' => $password,
+            'remember_token' => $remember_token,
+            'enterprise_id' => $enterprise_id,
         ];
     }
 

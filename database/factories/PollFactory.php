@@ -2,15 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Poll;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use \App\Models\Group;
+use \App\Models\{PollHistorical, Enterprise, User, Group, Poll, Alternative};
+use Database\Factories\Helpers\HelperResoucersFactories;
 
 /**
  * @extends Factory<Poll>
  */
 class PollFactory extends Factory
 {
+    //trait
+    use HelperResoucersFactories;
 
     /**
      * O nome da model correspondente.
@@ -25,13 +27,23 @@ class PollFactory extends Factory
      */
     public function definition(): array
     {
+        $group_id = Group::factory()->create()->id;
+
+        [
+            $is_active,
+            $name,
+            $question,
+            $pending_users_visibility,
+            $dead_line,
+        ] =  $this->createAPoll();
+
         return [
-            'group_id' => Group::inRandomOrder()->value('id') ?? Group::factory()->create(),
-            'is_active' => true,
-            'name' => fake()->text(10),
-            'question' => fake()->text(50),
-            'pending_users_visibility' => fake()->boolean(),
-            'dead_line' => fake()->dateTimeBetween('now', '1 week'),
+            'group_id' => $group_id,
+            'is_active' => $is_active,
+            'name' => $name,
+            'question' => $question,
+            'pending_users_visibility' => $pending_users_visibility,
+            'dead_line' => $dead_line,
 
         ];
     }

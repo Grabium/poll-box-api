@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use \App\Models\{GroupUser, User, Group, Enterprise};
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Database\Factories\Helpers\HelperResoucersFactories;
 
 /**
  * @extends Factory<GroupUser>
  */
 class GroupUserFactory extends Factory
 {
+    //trait
+    use HelperResoucersFactories;
+
     /**
      * The current password being used by the factory.
      */
@@ -22,21 +26,6 @@ class GroupUserFactory extends Factory
      */
     protected $model = GroupUser::class;
 
-    /***
-     * Função auxiliar
-     */
-    private function createAnUser(int $enterprise_id): User
-    {
-        return User::create([
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),//Não mudar. DB foi semeado.
-            'remember_token' => Str::random(10),
-            'enterprise_id' => $enterprise_id,
-        ]);
-    }
-
     /**
      * Define the model's default state.
      *
@@ -44,24 +33,14 @@ class GroupUserFactory extends Factory
      */
     public function definition(): array
     {
-        $enterprise_id = (Enterprise::inRandomOrder()->value('id') ?? Enterprise::factory()->create()->id);
-
-        $manager = $this->createAnUser($enterprise_id);
-        $memberUser = $this->createAnUser($enterprise_id);        
-
-        $group = Group::create([
-            'manager_id' => $manager->id,
-            'description' => fake()->text(20),
-        ]);
+        $enterprise_id = Enterprise::factory()->create()->id;
+        $manager_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;
+        $memberUser_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;       
+        $group = Group::factory()->create(['manager_id' => $manager_id,]);
         
         //Adiciionando o gerente do grupo. O memmbro deve ser passado no retorno desta função.
         // Mantém os usuários anteriores intocados e não os duplica caso já exista
-        $group->users()->syncWithoutDetaching($manager->id);
-        
-        
-        
-        //var_dump($group->users[0]->groups[0]->id);
-        
+        $group->users()->syncWithoutDetaching($manager_id);     
 
         // Terá mesmo efeito que: $group->users()->syncWithoutDetaching($memberUser->id);
         return [

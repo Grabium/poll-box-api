@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-
+use \App\Models\{PollHistorical, Enterprise, User, Group, Poll, Alternative, GroupUser, PendingVote};
+use Database\Factories\Helpers\HelperResoucersFactories;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use \App\Models\{PendingVote, User, Poll};
 
 /**
  * @extends Factory<PendingVote>
@@ -24,11 +24,17 @@ class PendingVoteFactory extends Factory
      */
     public function definition(): array
     {
-
+        $enterprise_id = Enterprise::factory()->create()->id;
+        $manager_id = User::factory()->create(['enterprise_id' => $enterprise_id,]);
+        $user_id    = User::factory()->create(['enterprise_id' => $enterprise_id,]);
+        $group      = Group::factory()->create(['manager_id' => $manager_id,]);
+        $group->users()->syncWithoutDetaching($manager_id);
+        $group->users()->syncWithoutDetaching($user_id);
+        $poll_id =  Poll::factory()->create(['group_id' => $group->id,])->id;
+        
         return [
-            //'user_id' => User::factory()->create(),
-            'user_id' => User::inRandomOrder()->value('id') ?? User::factory()->create()->id,
-            'poll_id' => Poll::inRandomOrder()->value('id') ?? Poll::factory()->create()->id,
+            'user_id' => $user_id,
+            'poll_id' => $poll_id,
         ];
     }
 }
