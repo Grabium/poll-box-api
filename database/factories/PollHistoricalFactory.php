@@ -37,20 +37,18 @@ class PollHistoricalFactory extends Factory
         $enterprise_id = Enterprise::factory()->create()->id;
 
         //criando gerente e usuários comuns
-        $manager_id  = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
-        $user_id1    = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
-        $user_id2    = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
-        $user_id3    = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
-        $user_id4    = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
+        foreach(range(1, 13) as $user_id){
+            $users_id[] = User::factory()->create(['enterprise_id' => $enterprise_id,])->id;
+        }
 
         //criando o grupo e o populando com gerente e usuários comuns
-        $group      = Group::factory()->create(['manager_id' => $manager_id,]);
-        $group->users()->syncWithoutDetaching($manager_id);
-        $group->users()->syncWithoutDetaching($user_id1);
-        $group->users()->syncWithoutDetaching($user_id2);
-        $group->users()->syncWithoutDetaching($user_id3);
-        $group->users()->syncWithoutDetaching($user_id4);
+        $group = Group::factory()->create(['manager_id' => $users_id[0],]);
 
+        //criando gerente e usuários comuns
+        foreach($users_id as $user_id){
+            $group->users()->syncWithoutDetaching($user_id);
+        }
+        
         /**
          * Criando a enquete. 
          * Não será necessário popular votos pendentes,
@@ -61,34 +59,36 @@ class PollHistoricalFactory extends Factory
         $alternatives[] = Alternative::factory()->create(['poll_id' => $poll->id, 'votes' => 0,]);
         $alternatives[] = Alternative::factory()->create(['poll_id' => $poll->id, 'votes' => 0,]);
 
-        //echo 'Início da votação:'.PHP_EOL;
+        //echo 'Simulação da votação:'.PHP_EOL;
         foreach($group->users as $k => $user){
+            if(0 === ($k % 2)){
+                PendingVote::create([
+                    'user_id' => $user->id,
+                    'poll_id' => $poll->id,
+                ]);
+                //echo 'Usuário  '.$user->id.' NÃO votou'.PHP_EOL;
+                continue;
+            }
             $changed = fake()->randomElement($alternatives);
             $changed_votes = $changed->votes +1;
             $changed->update(['votes' => $changed_votes]);
-            //dd($changed->getAttributes());
             //echo 'Usuário  '.$user->id.' votou em: '.$changed->id.PHP_EOL;
         }
 
-        // A instância $user ainda possui o status antigo na memória.
-        // Para atualizar a própria instância $user com os dados do banco:
-        dump($alternatives[0]->votes);
-        dump($alternatives[1]->votes);
-        //dd($alternatives);
-        dd(Alternative::find($alternatives[0]->id)->getAttributes(), Alternative::find($alternatives[1]->id)->getAttributes(), );
+        $votes = Alternative::where('poll_id', $poll->id)->get(['description', 'votes'])->toArray();
 
+        $pendings = PendingVote::where('poll_id', $poll->id)->get(['user_id'])->toArray();
 
-        // [
-        //     $votes,
-        // ] = $this->createAPollHistorical();//array
+        foreach ($pendings as $vote){
+           $pendings_votes[] = $vote['user_id'];
+        }
         
         return [
             'enterprise_id' => $enterprise_id,
-            'group_id' => $group_id,
-            'poll_id' => $poll_id,
+            'group_id' => $group->id,
+            'poll_id' => $poll->id,
             'votes' => $votes,
-            'votes_pending_after_deadline' => [random_int(0, count(User::all())),
-                                               random_int(0, count(User::all())),
-        ]];
+            'votes_pending_after_deadline' => $pendings_votes,
+        ];
     }
 }

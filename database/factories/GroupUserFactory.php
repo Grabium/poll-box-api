@@ -35,14 +35,12 @@ class GroupUserFactory extends Factory
     {
         $enterprise_id = Enterprise::factory()->create()->id;
         $manager_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;
-        $memberUser_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;       
         $group = Group::factory()->create(['manager_id' => $manager_id,]);
         
         //Adiciionando o gerente do grupo. O memmbro deve ser passado no retorno desta função.
         // Mantém os usuários anteriores intocados e não os duplica caso já exista
         $group->users()->syncWithoutDetaching($manager_id);     
 
-        // Terá mesmo efeito que: $group->users()->syncWithoutDetaching($memberUser->id);
         return [
             'user_id' => $memberUser->id,
             'group_id' => $group->id,
