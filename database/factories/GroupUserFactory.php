@@ -33,16 +33,26 @@ class GroupUserFactory extends Factory
      */
     public function definition(): array
     {
+        //Criando um usuário gerente (de grupo) e um usuário comum na mesma empresa.
         $enterprise_id = Enterprise::factory()->create()->id;
         $manager_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;
+        $memberUser_id = User::factory()->create(['enterprise_id' => $enterprise_id])->id;
+
+        //criando o grupo dentro dessa empresa que comporta os usuários
         $group = Group::factory()->create(['manager_id' => $manager_id,]);
         
-        //Adiciionando o gerente do grupo. O memmbro deve ser passado no retorno desta função.
         // Mantém os usuários anteriores intocados e não os duplica caso já exista
-        $group->users()->syncWithoutDetaching($manager_id);     
+        $group->users()->syncWithoutDetaching($manager_id);// Aqui pode-se inserir o gerente 
+
+        /***
+         * Usuários membros comuns não podem ser sincronizados no grupo aqui.
+         * Caso isso ocorra aqui: 
+         * $group->users()->syncWithoutDetaching($memberUser_id); 
+         * o Seeder tentará inserir o mesmo registro, causando erro por duplicação de registro na faze seguinte.
+         */
 
         return [
-            'user_id' => $memberUser->id,
+            'user_id' => $memberUser_id,
             'group_id' => $group->id,
         ];
     }

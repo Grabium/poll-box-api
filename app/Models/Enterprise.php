@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['cadastro_nacional', 'Razao_social'])]
+#[Fillable(['cadastro_nacional', 'razao_social'])]
 class Enterprise extends Model
 {
     /** @use HasFactory<UserFactory> */

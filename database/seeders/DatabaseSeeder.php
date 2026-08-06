@@ -14,9 +14,6 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
-     * 
-     * Dependências:
-     * Enterprise <- User <- Group <- Poll <- Alternative <-
      */
     public function run(): void
     {
@@ -29,6 +26,7 @@ class DatabaseSeeder extends Seeder
             GroupUserSeeder::class,
             PendingVoteSeeder::class,
             PollHistoricalSeeder::class,
+            VoteReceiptSeeder::class,
         ]);
 
     }
